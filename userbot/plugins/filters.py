@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Filters
 Available Commands:
 .savefilter
@@ -7,8 +10,6 @@ import asyncio
 import re
 from telethon import events, utils
 from telethon.tl import types
-from LEGENDBOT.utils import admin_cmd, sudo_cmd, edit_or_reply
-from userbot.cmdhelp import CmdHelp
 from userbot.plugins.sql_helper.filter_sql import get_filter, add_filter, remove_filter, get_all_filters, remove_all_filters
 
 
@@ -21,7 +22,8 @@ TYPE_DOCUMENT = 2
 global last_triggered_filters
 last_triggered_filters = {}  # pylint:disable=E0602
 
-@bot.on(admin_cmd(incoming=True))
+
+@command(incoming=True)
 async def on_snip(event):
     global last_triggered_filters
     name = event.raw_text
@@ -63,46 +65,32 @@ async def on_snip(event):
                 last_triggered_filters[event.chat_id].remove(name)
 
 
-@bot.on(admin_cmd(pattern="savefilter (.*)"))
-@bot.on(sudo_cmd(pattern="savefilter (.*)", allow_sudo=True))
+@command(pattern="^.savefilter (.*)")
 async def on_snip_save(event):
     name = event.pattern_match.group(1)
     msg = await event.get_reply_message()
     if msg:
-        snip = {"type": TYPE_TEXT, "text": msg.message or ""}
+        snip = {'type': TYPE_TEXT, 'text': msg.message or ''}
         if msg.media:
             media = None
             if isinstance(msg.media, types.MessageMediaPhoto):
                 media = utils.get_input_photo(msg.media.photo)
-                snip["type"] = TYPE_PHOTO
+                snip['type'] = TYPE_PHOTO
             elif isinstance(msg.media, types.MessageMediaDocument):
                 media = utils.get_input_document(msg.media.document)
-                snip["type"] = TYPE_DOCUMENT
+                snip['type'] = TYPE_DOCUMENT
             if media:
-                snip["id"] = media.id
-                snip["hash"] = media.access_hash
-                snip["fr"] = media.file_reference
-        add_filter(
-            event.chat_id,
-            name,
-            snip["text"],
-            snip["type"],
-            snip.get("id"),
-            snip.get("hash"),
-            snip.get("fr"),
-        )
+                snip['id'] = media.id
+                snip['hash'] = media.access_hash
+                snip['fr'] = media.file_reference
+        add_filter(event.chat_id, name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
         await event.edit(f"filter {name} saved successfully. Get it with {name}")
     else:
-        await event.edit(
-            "Reply to a message with `savefilter keyword` to save the filter"
-        )
-        
+        await event.edit("Reply to a message with `savefilter keyword` to save the filter")
 
-@bot.on(admin_cmd(pattern="listfilter$"))
-@bot.on(sudo_cmd(pattern="listfilter$", allow_sudo=True))
+
+@command(pattern="^.listfilters$")
 async def on_snip_list(event):
-    if event.fwd_from:
-        return
     all_snips = get_all_filters(event.chat_id)
     OUT_STR = "Available Filters in the Current Chat:\n"
     if len(all_snips) > 0:
@@ -123,33 +111,17 @@ async def on_snip_list(event):
             )
             await event.delete()
     else:
-        await edit_or_reply(event, OUT_STR)
+        await event.edit(OUT_STR)
 
 
-@bot.on(admin_cmd(pattern="stop (.*)"))
-@bot.on(sudo_cmd(pattern="stop (.*)", allow_sudo=True))
+@command(pattern="^.clearfilter (.*)")
 async def on_snip_delete(event):
-    if event.fwd_from:
-        return
     name = event.pattern_match.group(1)
     remove_filter(event.chat_id, name)
-    await edit_or_reply(event, f"Filter `{name}` deleted successfully")
+    await event.edit(f"filter {name} deleted successfully")
 
 
-@bot.on(admin_cmd(pattern="clearallfilters$"))
-@bot.on(sudo_cmd(pattern="clearallfilters$", allow_sudo=True))
+@command(pattern="^.clearallfilters$")
 async def on_all_snip_delete(event):
-    if event.fwd_from:
-        return
     remove_all_filters(event.chat_id)
-    await edit_or_reply(event, f"All the Filters **in current chat** deleted successfully")
-    
-CmdHelp("filters").add_command(
-  'savefilter', 'reply to a msg with keyword', 'Saves the replied msg as a reply to keyword. The bot will reply that msg wheneverthe keyword is mentioned.'
-).add_command(
-  'listfilter', None, 'Lists all the filters in chat'
-).add_command(
-  'clearallfilters', None, 'Deletes all the filter saved in a chat.'
-).add_command(
-  'stop', 'keyword of saved filter', 'Stops reply to the keyword mentioned.'
-).add()
+    await event.edit(f"filters **in current chat** deleted successfully")

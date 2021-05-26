@@ -1,11 +1,11 @@
-#credits: @r4v4n4
+
 import datetime
 from telethon import events
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.account import UpdateNotifySettingsRequest
-from userbot.utils import admin_cmd
+from uniborg.util import admin_cmd
 
-@borg.on(admin_cmd("frybot ?(.*)"))
+@borg.on(admin_cmd("dm ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return 
@@ -14,7 +14,7 @@ async def _(event):
        return
     reply_message = await event.get_reply_message() 
     if not reply_message.media:
-       await event.edit("```reply to text message```")
+       await event.edit("```reply to media```")
        return
     chat = "@image_deepfrybot"
     sender = reply_message.sender
@@ -31,6 +31,6 @@ async def _(event):
               await event.reply("```Please unblock @sangmatainfo_bot and try again```")
               return
           if response.text.startswith("Forward"):
-              await event.edit("```can you kindly disable your forward privacy settings for good?```")
+             await event.edit("```can you kindly disable your forward privacy settings for good?```")
           else: 
-              await borg.send_file(event.chat_id, response.message.media)
+             await event.edit(f"{response.message}")
