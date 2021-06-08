@@ -12,7 +12,7 @@ DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else "LEGEND User"
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.01
+    animation_interval = 1
     animation_ttl = range(0, 28)
     event = await edit_or_reply(event, "ThInKiNg...")
     animation_chars = [
@@ -63,7 +63,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.3
+    animation_interval = 0.5
     animation_ttl = range(0, 27)
     event = await edit_or_reply(event, "Sssss...Snake...")
     animation_chars = [
@@ -136,7 +136,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.3
+    animation_interval = 0.5
     animation_ttl = range(0, 28)
     event = await edit_or_reply(event, "Huh??")
     animation_chars = [
@@ -224,7 +224,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.2
+    animation_interval = 1
     animation_ttl = range(0, 30)
     event = await edit_or_reply(event, "Rappppeeeee.....Shhh!!!")
     animation_chars = [
@@ -269,7 +269,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.5
+    animation_interval = 1
     animation_ttl = range(0, 6)
     event = await edit_or_reply(event, "Nikal Lavde Lassun..")
     animation_chars = [
@@ -312,7 +312,7 @@ async def _(event):
 
 
 @bot.on(admin_cmd(pattern=f"squeeze$", outgoing=True))
-@bot.on(sudo_cmd(pattern="squeeze$", allow_sudo=True))
+@bot.on(sudo_cmd(pattern=f"squeeze$", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
@@ -367,7 +367,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.3
+    animation_interval = 1
     animation_ttl = range(0, 20)
     event = await edit_or_reply(event, "▯")
     animation_chars = ["▮", "▯", "▬", "▭", "‎"]
@@ -381,7 +381,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.3
+    animation_interval = 1
     animation_ttl = range(0, 20)
     event = await edit_or_reply(event, "◨")
     animation_chars = ["◧", "◨", "◧", "◨", ""]
@@ -395,7 +395,7 @@ async def _(event):
 async def _(event):
     if event.fwd_from:
         return
-    animation_interval = 0.3
+    animation_interval = 1
     animation_ttl = range(0, 20)
     event = await edit_or_reply(event, "╻")
     animation_chars = ["╹", "╻", "╹", "╻", "‎"]
